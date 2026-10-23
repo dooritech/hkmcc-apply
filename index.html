@@ -8,16 +8,18 @@
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
     .container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     h2 { text-align: center; color: #1a73e8; margin-top: 0; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
-    input, select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-    .row-group { display: flex; gap: 10px; }
+    h3 { font-size: 15px; color: #333; border-bottom: 2px solid #1a73e8; padding-bottom: 5px; margin-top: 25px; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; color: #444; font-size: 13px; }
+    input, select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+    textarea { resize: vertical; height: 60px; }
+    .row-group { display: flex; gap: 8px; margin-bottom: 8px; }
     .member-box { border: 1px dashed #1a73e8; padding: 12px; border-radius: 6px; margin-bottom: 10px; background-color: #f8fbff; position: relative; }
     .btn { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
     .btn:hover { background: #1557b0; }
     .btn-add { background: #34a853; margin-top: 5px; margin-bottom: 15px; }
     .btn-add:hover { background: #2e8b46; }
-    .btn-del { background: #ea4335; padding: 5px 10px; font-size: 12px; width: auto; position: absolute; top: 10px; right: 10px; border-radius: 3px; }
+    .btn-del { background: #ea4335; padding: 5px 10px; font-size: 12px; width: auto; position: absolute; top: 10px; right: 10px; border-radius: 3px; color: white; border: none; cursor: pointer; }
     .loading { text-align: center; color: #666; font-style: italic; display: none; margin-top: 10px; }
   </style>
 </head>
@@ -27,19 +29,53 @@
     <h2>🎁 신자 및 가족 선물 등록</h2>
     <form id="regForm">
       
-      <!-- 구역 및 반 -->
+      <!-- 1. 등록자 정보 (대표 신자) -->
+      <h3>1. 등록자 정보 (대표 신자)</h3>
+      
       <div class="form-group">
-        <label>구역 및 반</label>
+        <label>구역 선택</label>
+        <select id="zone" required>
+          <option value="" disabled selected>구역을 선택하세요</option>
+          <option value="노스 산호세">노스 산호세</option>
+          <option value="라이트 하우스">라이트 하우스</option>
+          <option value="로스 알토스">로스 알토스</option>
+          <option value="밀피타스">밀피타스</option>
+          <option value="사라토가 캠벨">사라토가 캠벨</option>
+          <option value="사우스 카운티">사우스 카운티</option>
+          <option value="산타 클라라">산타 클라라</option>
+          <option value="센트럴 산호세">센트럴 산호세</option>
+          <option value="써니베일">써니베일</option>
+          <option value="알마덴">알마덴</option>
+          <option value="웨스트 산호세">웨스트 산호세</option>
+          <option value="웨스트 쿠퍼티노">웨스트 쿠퍼티노</option>
+          <option value="이스트 쿠퍼티노">이스트 쿠퍼티노</option>
+          <option value="캠브리안">캠브리안</option>
+          <option value="팔로알토">팔로알토</option>
+          <option value="프리몬트">프리몬트</option>
+          <option value="없음">없음</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>반 (선택사항)</label>
+        <input type="text" id="ban" placeholder="반 입력 (예: 1)">
+      </div>
+
+      <div class="form-group">
+        <label>대표자 이름 및 세례명 (필수)</label>
         <div class="row-group">
-          <input type="text" id="zone" placeholder="구역 (예: 노스산호세)" required>
-          <input type="text" id="ban" placeholder="반 (예: 1)" style="width: 100px;" required>
+          <input type="text" id="repName" placeholder="이름 (필수)" required>
+          <input type="text" id="repBaptism" placeholder="세례명">
         </div>
       </div>
 
-      <!-- 연락처 및 주소 (가족 공통) -->
       <div class="form-group">
-        <label>연락처 및 주소 (선택)</label>
-        <input type="text" id="phone" placeholder="전화번호" style="margin-bottom: 8px;">
+        <label>대표자 전화번호 (필수)</label>
+        <input type="text" id="repPhone" placeholder="전화번호 (예: 408-123-4567)" required>
+      </div>
+
+      <div class="form-group">
+        <label>주소 (공통)</label>
         <input type="text" id="address" placeholder="주소" style="margin-bottom: 8px;">
         <div class="row-group">
           <input type="text" id="city" placeholder="City">
@@ -55,18 +91,24 @@
         </select>
       </div>
 
-      <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+      <!-- 2. 본당 단체 가입 여부 (단답형) -->
+      <h3>2. 본당 단체 가입 여부</h3>
+      <div class="form-group">
+        <label>가입된 본당 단체가 있다면 적어주세요 (단답형)</label>
+        <input type="text" id="groups" placeholder="예: 레지오마리애, 성가대 등">
+      </div>
 
-      <!-- 신자 구성원 입력 영역 -->
-      <label>가족 구성원 정보</label>
+      <!-- 3. 구역 미참가 이유 -->
+      <h3>3. 구역참가 (소속 또는 미참가 사유)</h3>
+      <div class="form-group">
+        <label>구역에 소속 또는 참여하지 않은 이유를 간단히 써주세요 (선택)</label>
+        <textarea id="reason" placeholder="사유를 입력하세요"></textarea>
+      </div>
+
+      <!-- 4. 추가 가족 구성원 정보 -->
+      <h3>4. 추가 가족 구성원 정보 (선택)</h3>
       <div id="membersContainer">
-        <div class="member-box">
-          <label style="font-size: 13px; color: #1a73e8; margin-bottom: 5px;">대표 신자</label>
-          <div class="row-group">
-            <input type="text" class="m-name" placeholder="이름 (필수)" required>
-            <input type="text" class="m-baptism" placeholder="세례명">
-          </div>
-        </div>
+        <!-- 동적으로 추가되는 가족 칸들이 여기에 들어갑니다 -->
       </div>
 
       <button type="button" class="btn btn-add" onclick="addMemberField()">+ 가족 구성원 추가하기</button>
@@ -76,26 +118,25 @@
   </div>
 
   <script>
-    // ⚠️ 1단계에서 복사한 구글 앱스 스크립트 웹 앱 URL을 여기에 붙여넣으세요!
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQTzyY0zCH-dE3yWXB-IFLFbZRHjkjy4WfztdXCuF3735JpUJjAdYgYJP6Q_Tedvzm/exec"; 
+    // ⚠️ 구글 앱스 스크립트 웹 앱 URL을 여기에 입력하세요
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhupNpQaHGdUIjH9TolEX-qjq52lum6vA3Fv5HEZ5-l8jAyQcD6LKj9JvYnz-VjtOVCg/exec"; 
 
-    // 가족 구성원 입력 칸 동적 추가 함수
     function addMemberField() {
       const container = document.getElementById('membersContainer');
       const div = document.createElement('div');
       div.className = 'member-box';
       div.innerHTML = `
-        <button type="button" class="btn btn-del" onclick="this.parentElement.remove()">삭제</button>
-        <label style="font-size: 13px; color: #555; margin-bottom: 5px;">가족 구성원</label>
+        <button type="button" class="btn-del" onclick="this.parentElement.remove()">삭제</button>
+        <label style="font-size: 12px; color: #555; margin-bottom: 5px;">가족 구성원</label>
         <div class="row-group">
           <input type="text" class="m-name" placeholder="이름 (필수)" required>
           <input type="text" class="m-baptism" placeholder="세례명">
         </div>
+        <input type="text" class="m-phone" placeholder="전화번호 (선택)">
       `;
       container.appendChild(div);
     }
 
-    // 폼 제출 이벤트 처리
     document.getElementById('regForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
@@ -104,26 +145,34 @@
         return;
       }
 
-      const names = document.querySelectorAll('.m-name');
-      const baptisms = document.querySelectorAll('.m-baptism');
+      // 전체 신자 목록 배열 생성 (대표자 먼저 추가)
       let members = [];
-      
-      for(let i = 0; i < names.length; i++) {
+      members.push({
+        name: document.getElementById('repName').value,
+        baptismName: document.getElementById('repBaptism').value,
+        phone: document.getElementById('repPhone').value
+      });
+
+      // 추가 가족 구성원들 수집
+      const memberBoxes = document.querySelectorAll('.member-box');
+      memberBoxes.forEach(box => {
         members.push({
-          name: names[i].value,
-          baptismName: baptisms[i].value
+          name: box.querySelector('.m-name').value,
+          baptismName: box.querySelector('.m-baptism').value,
+          phone: box.querySelector('.m-phone').value
         });
-      }
+      });
 
       const payload = {
         action: 'registerMembers',
         zone: document.getElementById('zone').value,
         ban: document.getElementById('ban').value,
-        phone: document.getElementById('phone').value,
         address: document.getElementById('address').value,
         city: document.getElementById('city').value,
         zipcode: document.getElementById('zipcode').value,
         gift: document.getElementById('gift').value,
+        groups: document.getElementById('groups').value,
+        reason: document.getElementById('reason').value,
         members: members
       };
 
@@ -140,24 +189,15 @@
         const result = await response.json();
         
         if(result.success) {
-          alert(`🎉 등록이 성공적으로 완료되었습니다!\n\n• 부여된 가족 ID (FID): ${result.fid}\n• 등록된 인원 수: ${result.count}명`);
+          alert(`🎉 등록이 성공적으로 완료되었습니다!\n\n• 부여된 가족 ID (FID): ${result.fid}\n• 등록된 총 인원: ${result.count}명`);
           document.getElementById('regForm').reset();
-          // 입력창 초기화 후 대표 신자 칸 1개만 남기기
-          document.getElementById('membersContainer').innerHTML = `
-            <div class="member-box">
-              <label style="font-size: 13px; color: #1a73e8; margin-bottom: 5px;">대표 신자</label>
-              <div class="row-group">
-                <input type="text" class="m-name" placeholder="이름 (필수)" required>
-                <input type="text" class="m-baptism" placeholder="세례명">
-              </div>
-            </div>
-          `;
+          document.getElementById('membersContainer').innerHTML = '';
         } else {
           alert('등록 실패: ' + (result.error || result.message));
         }
       } catch (err) {
         console.error(err);
-        alert('서버 통신 중 오류가 발생했습니다. 네트워크 상태나 URL을 확인해주세요.');
+        alert('서버 통신 중 오류가 발생했습니다.');
       } finally {
         btn.disabled = false;
         loading.style.display = 'none';
