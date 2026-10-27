@@ -75,6 +75,11 @@
       </div>
 
       <div class="form-group">
+        <label>대표자 이메일 (선택)</label>
+        <input type="email" id="repEmail" placeholder="이메일 주소 (예: example@email.com)">
+      </div>
+      
+      <div class="form-group">
         <label>주소 (공통)</label>
         <input type="text" id="address" placeholder="주소" style="margin-bottom: 8px;">
         <div class="row-group">
@@ -99,7 +104,7 @@
       </div>
 
       <!-- 3. 구역 미참가 이유 -->
-      <h3>3. 구역참가 (소속 또는 미참가 사유)</h3>
+      <h3>3. 구역참가 (구역 미등록 또는 미참가 사유)</h3>
       <div class="form-group">
         <label>구역에 소속 또는 참여하지 않은 이유를 간단히 써주세요 (선택)</label>
         <textarea id="reason" placeholder="사유를 입력하세요"></textarea>
@@ -132,7 +137,8 @@
           <input type="text" class="m-name" placeholder="이름 (필수)" required>
           <input type="text" class="m-baptism" placeholder="세례명">
         </div>
-        <input type="text" class="m-phone" placeholder="전화번호 (선택)">
+        <input type="text" class="m-phone" placeholder="전화번호 (선택)" style="margin-bottom: 8px;">
+        <input type="email" class="m-email" placeholder="이메일 주소 (선택)">
       `;
       container.appendChild(div);
     }
@@ -150,7 +156,8 @@
       members.push({
         name: document.getElementById('repName').value,
         baptismName: document.getElementById('repBaptism').value,
-        phone: document.getElementById('repPhone').value
+        phone: document.getElementById('repPhone').value,
+        email: document.getElementById('repEmail').value // 추가
       });
 
       // 추가 가족 구성원들 수집
@@ -159,7 +166,8 @@
         members.push({
           name: box.querySelector('.m-name').value,
           baptismName: box.querySelector('.m-baptism').value,
-          phone: box.querySelector('.m-phone').value
+          phone: box.querySelector('.m-phone').value,
+          email: box.querySelector('.m-email').value // 추가
         });
       });
 
