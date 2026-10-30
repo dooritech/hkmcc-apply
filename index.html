@@ -124,7 +124,7 @@
 
   <script>
     // ⚠️ 구글 앱스 스크립트 웹 앱 URL을 여기에 입력하세요
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3RVAwoMvHTIOYubSDMp_tA8v1l65lfG7m3Ztyyp4LvHrlBluiPD8W3CThLFqn9Lou/exec"; 
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwd6IxhN3gh_I-1x0aR458LMJzIimaq4z0VQoZcP0M6hLOe4gi0jO9BVqoaBRXTEUG4Tw/exec"; 
 
     function addMemberField() {
       const container = document.getElementById('membersContainer');
@@ -143,21 +143,15 @@
       container.appendChild(div);
     }
 
-    document.getElementById('regForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      if (APPS_SCRIPT_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
-        alert("코드 내에 구글 앱스 스크립트 웹 앱 URL을 먼저 입력해 주세요!");
-        return;
-      }
-
+    // 폼 제출 핸들러 (forceAdd 파라미터로 중복 시 강제 추가 여부 결정)
+    async function submitForm(forceAdd = false) {
       // 전체 신자 목록 배열 생성 (대표자 먼저 추가)
       let members = [];
       members.push({
         name: document.getElementById('repName').value,
         baptismName: document.getElementById('repBaptism').value,
         phone: document.getElementById('repPhone').value,
-        email: document.getElementById('repEmail').value // 추가
+        email: document.getElementById('repEmail').value
       });
 
       // 추가 가족 구성원들 수집
@@ -167,7 +161,7 @@
           name: box.querySelector('.m-name').value,
           baptismName: box.querySelector('.m-baptism').value,
           phone: box.querySelector('.m-phone').value,
-          email: box.querySelector('.m-email').value // 추가
+          email: box.querySelector('.m-email').value
         });
       });
 
@@ -181,7 +175,8 @@
         gift: document.getElementById('gift').value,
         groups: document.getElementById('groups').value,
         reason: document.getElementById('reason').value,
-        members: members
+        members: members,
+        forceAdd: forceAdd // 중복 무시하고 강제 추가할지 여부
       };
 
       const btn = document.getElementById('subBtn');
@@ -196,10 +191,25 @@
         });
         const result = await response.json();
         
-        if(result.success) {
+        if (result.success) {
           alert(`🎉 등록이 성공적으로 완료되었습니다!\n\n• 부여된 가족 ID (FID): ${result.fid}\n• 등록된 총 인원: ${result.count}명`);
           document.getElementById('regForm').reset();
           document.getElementById('membersContainer').innerHTML = '';
+        } else if (result.isDuplicate) {
+          // 중복 신자가 발견된 경우 경고 팝업 생성
+          let msg = "⚠️ 동일한 이름과 세례명을 가진 신자가 이미 존재합니다!\n\n[중복된 기존 정보]\n";
+          result.duplicates.forEach(d => {
+            msg += `• 이름: ${d.name} (${d.baptismName || '세례명 없음'}) / 구역: ${d.zone} / 연락처: ${d.phone} (가족ID: ${d.fid})\n`;
+          });
+          msg += "\n본인이 맞다면 [취소]를 눌러 등록을 중단하시고,\n동명이인의 다른 사람이 맞다면 [확인]을 눌러 계속 추가하세요.";
+          
+          if (confirm(msg)) {
+            // 사용자가 '확인'을 누르면 동명이인으로 판단하여 강제 추가 진행
+            submitForm(true);
+          } else {
+            // 사용자가 '취소'를 누르면 중단
+            alert("등록이 취소되었습니다.");
+          }
         } else {
           alert('등록 실패: ' + (result.error || result.message));
         }
@@ -210,6 +220,17 @@
         btn.disabled = false;
         loading.style.display = 'none';
       }
+    }
+
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (APPS_SCRIPT_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+        alert("코드 내에 구글 앱스 스크립트 웹 앱 URL을 먼저 입력해 주세요!");
+        return;
+      }
+
+      submitForm(false); // 일반 등록 시도 (중복 체크 포함)
     });
   </script>
 </body>
